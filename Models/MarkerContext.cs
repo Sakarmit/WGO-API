@@ -6,7 +6,7 @@ namespace WGO_API.Models
     {
         public MarkerContext(DbContextOptions<MarkerContext> options) : base(options)
         {
-
+            
         }
 
         public DbSet<Marker> Markers { get; set; } = null!;
