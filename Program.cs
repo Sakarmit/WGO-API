@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using WGO_API.Models;
+using WGO_API.Models.CommentModel;
+using WGO_API.Models.MarkerModel;
+using WGO_API.Models.UserModel;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<MarkerContext>(opt =>
-    opt.UseSqlite("Data Source=Markers.db"));
+    opt.UseSqlite("Data Source=Databases/Markers.db"));
+builder.Services.AddDbContext<UserContext>(opt =>
+    opt.UseSqlite("Data Source=Databases/Users.db"));
+builder.Services.AddDbContext<CommentContext>(opt =>
+    opt.UseSqlite("Data Source=Databases/Comments.db"));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WGO_API.Models;
+using WGO_API.Models.MarkerModel;
 
 namespace WGO_API.Controllers
 {
@@ -90,7 +90,7 @@ namespace WGO_API.Controllers
             var marker = new Marker
             {
                 Id = markerDTO.Id,
-                User = markerDTO.User,
+                UserId = markerDTO.UserId,
                 latitude = markerDTO.latitude,
                 longitude = markerDTO.longitude,
                 DateTime = markerDTO.DateTime,
@@ -137,7 +137,7 @@ namespace WGO_API.Controllers
         => new MarkerDTO
         {
             Id = marker.Id,
-            User = marker.User,
+            UserId = marker.UserId,
             //Not adding reportCount
             latitude = marker.latitude,
             longitude = marker.longitude,
