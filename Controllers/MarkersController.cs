@@ -107,32 +107,12 @@ namespace WGO_API.Controllers
                 MarkerToDTO(marker));
         }
 
-        // DELETE: api/Markers/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMarker(long id)
-        {
-            if (_context.Markers == null)
-            {
-                return NotFound();
-            }
-            var marker = await _context.Markers.FindAsync(id);
-            if (marker == null)
-            {
-                return NotFound();
-            }
-
-            _context.Markers.Remove(marker);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
         private bool MarkerExists(long id)
         {
             return (_context.Markers?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        //Converts the Marker object to MarkerDTO hiding non-public info
+        //Converts the Marker object to MarkerDTO hiding private info
         private static MarkerDTO MarkerToDTO(Marker marker)
         => new MarkerDTO
         {
