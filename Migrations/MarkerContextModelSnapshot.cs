@@ -29,7 +29,7 @@ namespace WGO_API.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<byte>("ReportCount")
+                    b.Property<int>("ReportCount")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Summary")

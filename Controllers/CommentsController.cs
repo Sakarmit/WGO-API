@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.RulesetToEditorconfig;
 using Microsoft.EntityFrameworkCore;
 using WGO_API.Models.CommentModel;
+using WGO_API.Models.MarkerModel;
 
 namespace WGO_API.Controllers
 {
@@ -20,37 +22,19 @@ namespace WGO_API.Controllers
             _context = context;
         }
 
-        // GET: api/Comments
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
-        {
-          if (_context.Comments == null)
-          {
-              return NotFound();
-          }
-            return await _context.Comments.ToListAsync();
-        }
-
-        // GET: api/Comments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Comment>> GetComment(int id)
+        public async Task<ActionResult<IEnumerable<CommentDTO>>> GetCommentsForMarker(int id)
         {
-          if (_context.Comments == null)
-          {
-              return NotFound();
-          }
-            var comment = await _context.Comments.FindAsync(id);
-
-            if (comment == null)
+            if (_context.Comments == null)
             {
                 return NotFound();
             }
-
-            return comment;
+            return await _context.Comments
+              .Where(x => x.MarkerId == id)
+              .Select(x => CommentToDTO(x))
+              .ToListAsync();
         }
 
-        // PUT: api/Comments/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutComment(int id, Comment comment)
         {
@@ -58,8 +42,6 @@ namespace WGO_API.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(comment).State = EntityState.Modified;
 
             try
             {
@@ -80,8 +62,6 @@ namespace WGO_API.Controllers
             return NoContent();
         }
 
-        // POST: api/Comments
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
@@ -95,7 +75,6 @@ namespace WGO_API.Controllers
             return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
         }
 
-        // DELETE: api/Comments/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComment(int id)
         {
@@ -115,9 +94,43 @@ namespace WGO_API.Controllers
             return NoContent();
         }
 
+        [HttpPut("{id}/Report")]
+        public async Task<ActionResult<int>> ReportMarker(int id)
+        {
+            var comment = await _context.Comments.FindAsync(id);
+
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            comment.ReportCount += 1;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException) when (!CommentExists(id))
+            {
+                return NotFound();
+            }
+            return comment.ReportCount;
+        }
+
         private bool CommentExists(int id)
         {
             return (_context.Comments?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        // Converts the Comment object to CommentDTO hiding private info
+        private static CommentDTO CommentToDTO(Comment marker)
+        => new CommentDTO
+        {
+            Id = marker.Id,
+            MarkerId = marker.MarkerId,
+            UserId = marker.UserId,
+            DateTime = marker.DateTime,
+            Message = marker.Message,  
+        };
     }
 }
