@@ -12,7 +12,7 @@ namespace WGO_API.Models.MarkerModel
         public required float latitude { get; set; }
         public DateTime DateTime { get; set; }
         public DateTime EndTime { get; set; }
-        public byte ReportCount { get; set; }
+        public int ReportCount { get; set; }
 
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WGO_API.Models.MarkerModel;
 
@@ -10,9 +11,11 @@ using WGO_API.Models.MarkerModel;
 namespace WGO_API.Migrations
 {
     [DbContext(typeof(MarkerContext))]
-    partial class MarkerContextModelSnapshot : ModelSnapshot
+    [Migration("20230816175451_FixReportCountType")]
+    partial class FixReportCountType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.10");

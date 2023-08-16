@@ -22,7 +22,6 @@ namespace WGO_API.Controllers
             _context = context;
         }
 
-        // GET: api/Comments/5
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<CommentDTO>>> GetCommentsForMarker(int id)
         {
@@ -31,13 +30,11 @@ namespace WGO_API.Controllers
                 return NotFound();
             }
             return await _context.Comments
-              .Where(c => c.MarkerId == id)
-              .Select(c => CommentToDTO(c))
+              .Where(x => x.MarkerId == id)
+              .Select(x => CommentToDTO(x))
               .ToListAsync();
         }
 
-        // PUT: api/Comments/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutComment(int id, Comment comment)
         {
@@ -45,8 +42,6 @@ namespace WGO_API.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(comment).State = EntityState.Modified;
 
             try
             {
@@ -67,8 +62,6 @@ namespace WGO_API.Controllers
             return NoContent();
         }
 
-        // POST: api/Comments
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
@@ -82,7 +75,6 @@ namespace WGO_API.Controllers
             return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
         }
 
-        // DELETE: api/Comments/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComment(int id)
         {
@@ -100,6 +92,29 @@ namespace WGO_API.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpPut("{id}/Report")]
+        public async Task<ActionResult<int>> ReportMarker(int id)
+        {
+            var comment = await _context.Comments.FindAsync(id);
+
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            comment.ReportCount += 1;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException) when (!CommentExists(id))
+            {
+                return NotFound();
+            }
+            return comment.ReportCount;
         }
 
         private bool CommentExists(int id)
