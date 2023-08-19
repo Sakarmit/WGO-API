@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.RulesetToEditorconfig;
 using Microsoft.EntityFrameworkCore;
 using WGO_API.Models.CommentModel;
 using WGO_API.Models.MarkerModel;
+using WGO_API.Models.ReportModel;
 
 namespace WGO_API.Controllers
 {
@@ -95,9 +96,9 @@ namespace WGO_API.Controllers
         }
 
         [HttpPut("{id}/Report")]
-        public async Task<ActionResult<int>> ReportMarker(int id)
+        public async Task<ActionResult<bool>> ReportComment(Report report)
         {
-            var comment = await _context.Comments.FindAsync(id);
+            var comment = await _context.Comments.FindAsync(report.ItemId);
 
             if (comment == null)
             {
@@ -105,16 +106,30 @@ namespace WGO_API.Controllers
             }
 
             comment.ReportCount += 1;
+            if (comment.ReportCount > 10)
+            {
+                using (var reportContext = new ReportContext())
+                {
+                    reportContext.Reports
+                    .RemoveRange(reportContext.Reports
+                    .Where(x => x.ItemId == report.ItemId && x.Type == report.Type));
 
+                    await reportContext.SaveChangesAsync();
+                }
+                _context.Comments.Remove(comment);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException) when (!CommentExists(id))
+            catch (DbUpdateConcurrencyException) when (!CommentExists(report.ItemId))
             {
                 return NotFound();
             }
-            return comment.ReportCount;
+            return false;
         }
 
         private bool CommentExists(int id)

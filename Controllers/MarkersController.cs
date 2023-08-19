@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WGO_API.Models.MarkerModel;
+using WGO_API.Models.ReportModel;
 
 namespace WGO_API.Controllers
 {
@@ -95,7 +96,7 @@ namespace WGO_API.Controllers
             }
 
             var marker = await _context.Markers.FindAsync(id);
-            
+
             if (marker == null)
             {
                 return NotFound();
@@ -135,9 +136,9 @@ namespace WGO_API.Controllers
         }
 
         [HttpPut("{id}/Report")]
-        public async Task<ActionResult<int>> ReportMarker(int id)
+        public async Task<ActionResult<bool>> ReportMarker(Report report)
         {
-            var marker = await _context.Markers.FindAsync(id);
+            var marker = await _context.Markers.FindAsync(report.ItemId);
 
             if (marker == null)
             {
@@ -145,16 +146,31 @@ namespace WGO_API.Controllers
             }
 
             marker.ReportCount += 1;
+            if (marker.ReportCount > 10)
+            {
+                using (var reportContext = new ReportContext())
+                {
+                    reportContext.Reports
+                    .RemoveRange(reportContext.Reports
+                    .Where(x => x.ItemId == report.ItemId && x.Type == report.Type));
 
+                    await reportContext.SaveChangesAsync();
+                }
+                _context.Markers.Remove(marker);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+
+            
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException) when (!MarkerExists(id))
+            catch (DbUpdateConcurrencyException) when (!MarkerExists(report.ItemId))
             {
                 return NotFound();
             }
-            return marker.ReportCount;
+            return false;
         }
 
         private bool MarkerExists(int id)
