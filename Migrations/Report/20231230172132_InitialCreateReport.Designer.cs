@@ -3,45 +3,43 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WGO_API.Models.UserModel;
+using WGO_API.Models.ReportModel;
 
 #nullable disable
 
-namespace WGO_API.Migrations.User
+namespace WGO_API.Migrations.Report
 {
-    [DbContext(typeof(UserContext))]
-    [Migration("20230809231643_InitialCreateUser")]
-    partial class InitialCreateUser
+    [DbContext(typeof(ReportContext))]
+    [Migration("20231230172132_InitialCreateReport")]
+    partial class InitialCreateReport
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.9");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
 
-            modelBuilder.Entity("WGO_API.Models.UserModel.User", b =>
+            modelBuilder.Entity("WGO_API.Models.ReportModel.Report", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("EmailConfirmed")
+                    b.Property<int>("ItemId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
+                    b.Property<string>("Message")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("UserBanned")
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Reports");
                 });
 #pragma warning restore 612, 618
         }

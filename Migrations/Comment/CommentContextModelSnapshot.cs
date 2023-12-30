@@ -7,7 +7,7 @@ using WGO_API.Models.CommentModel;
 
 #nullable disable
 
-namespace WGO_API.Migrations.Comment
+namespace WGO_API.Migrations
 {
     [DbContext(typeof(CommentContext))]
     partial class CommentContextModelSnapshot : ModelSnapshot

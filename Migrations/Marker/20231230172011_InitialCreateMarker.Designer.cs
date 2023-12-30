@@ -8,11 +8,11 @@ using WGO_API.Models.MarkerModel;
 
 #nullable disable
 
-namespace WGO_API.Migrations
+namespace WGO_API.Migrations.Marker
 {
     [DbContext(typeof(MarkerContext))]
-    [Migration("20230816175451_FixReportCountType")]
-    partial class FixReportCountType
+    [Migration("20231230172011_InitialCreateMarker")]
+    partial class InitialCreateMarker
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
