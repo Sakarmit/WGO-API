@@ -1,0 +1,12 @@
+#Wipe and Recreate Migrations (Only for development purpose - DO NOT USE IF YOU WISE TO NOT ALSO WIPE DATABASES)
+Get-ChildItem -Path 'Migrations' -Recurse -File -Include *.cs | %{Remove-Item -Path $_};
+dotnet ef migrations add InitialCreateComment --context CommentContext --output-dir 'Migrations\Comment\';
+dotnet ef migrations add InitialCreateMarker --context MarkerContext --output-dir  'Migrations\Marker\';
+dotnet ef migrations add InitialCreateReport --context ReportContext --output-dir  'Migrations\Report\';
+dotnet ef migrations add InitialCreateUser --context UserContext --output-dir  'Migrations\User\';
+#Wipe remake databases
+Get-ChildItem -Path 'Databases' -Recurse -File -Include *.db | %{Remove-Item -Path $_};
+dotnet ef database update --context CommentContext;
+dotnet ef database update --context MarkerContext;
+dotnet ef database update --context ReportContext;
+dotnet ef database update --context UserContext
