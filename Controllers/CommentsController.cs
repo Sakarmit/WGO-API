@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.RulesetToEditorconfig;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WGO_API.Models.CommentModel;
-using WGO_API.Models.MarkerModel;
 using WGO_API.Models.ReportModel;
 
 namespace WGO_API.Controllers
