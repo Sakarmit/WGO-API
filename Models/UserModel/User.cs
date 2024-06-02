@@ -1,11 +1,9 @@
-﻿namespace WGO_API.Models.UserModel
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace WGO_API.Models.UserModel
 {
-    public class User
+    public class User : IdentityUser
     {
-        public int Id { get; set; }
-        public required string Email { get; set; }
-        public required string Password { get; set; }
-        public Boolean EmailConfirmed { get; set; }
         public Boolean UserBanned { get; set; }
     }
 }

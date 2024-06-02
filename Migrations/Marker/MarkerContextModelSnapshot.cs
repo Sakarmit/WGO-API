@@ -15,7 +15,7 @@ namespace WGO_API.Migrations.Marker
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.5");
 
             modelBuilder.Entity("WGO_API.Models.MarkerModel.Marker", b =>
                 {
