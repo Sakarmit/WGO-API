@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\ayira\\Desktop\\WGO-API\\WGO-API\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{77C9FEEF-3816-4DEE-94ED-9EA560BEA6E8}|WGO-API.csproj|c:\\users\\ayira\\desktop\\wgo-api\\wgo-api\\controllers\\markerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{77C9FEEF-3816-4DEE-94ED-9EA560BEA6E8}|WGO-API.csproj|solutionrelative:controllers\\markerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{77C9FEEF-3816-4DEE-94ED-9EA560BEA6E8}|WGO-API.csproj|c:\\users\\ayira\\desktop\\wgo-api\\wgo-api\\models\\usermodel\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77C9FEEF-3816-4DEE-94ED-9EA560BEA6E8}|WGO-API.csproj|solutionrelative:models\\usermodel\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{77C9FEEF-3816-4DEE-94ED-9EA560BEA6E8}|WGO-API.csproj|c:\\users\\ayira\\desktop\\wgo-api\\wgo-api\\controllers\\commentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{77C9FEEF-3816-4DEE-94ED-9EA560BEA6E8}|WGO-API.csproj|solutionrelative:controllers\\commentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{77C9FEEF-3816-4DEE-94ED-9EA560BEA6E8}|WGO-API.csproj|c:\\users\\ayira\\desktop\\wgo-api\\wgo-api\\models\\supportingmodels\\updatevalue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77C9FEEF-3816-4DEE-94ED-9EA560BEA6E8}|WGO-API.csproj|solutionrelative:models\\supportingmodels\\updatevalue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{77C9FEEF-3816-4DEE-94ED-9EA560BEA6E8}|WGO-API.csproj|c:\\users\\ayira\\desktop\\wgo-api\\wgo-api\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -22,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -34,41 +34,41 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "UserDTO.cs",
+              "DocumentMoniker": "C:\\Users\\ayira\\Desktop\\WGO-API\\WGO-API\\Models\\UserModel\\UserDTO.cs",
+              "RelativeDocumentMoniker": "Models\\UserModel\\UserDTO.cs",
+              "ToolTip": "C:\\Users\\ayira\\Desktop\\WGO-API\\WGO-API\\Models\\UserModel\\UserDTO.cs",
+              "RelativeToolTip": "Models\\UserModel\\UserDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-03T17:24:24.149Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UpdateValue.cs",
+              "DocumentMoniker": "C:\\Users\\ayira\\Desktop\\WGO-API\\WGO-API\\Models\\SupportingModels\\UpdateValue.cs",
+              "RelativeDocumentMoniker": "Models\\SupportingModels\\UpdateValue.cs",
+              "ToolTip": "C:\\Users\\ayira\\Desktop\\WGO-API\\WGO-API\\Models\\SupportingModels\\UpdateValue.cs",
+              "RelativeToolTip": "Models\\SupportingModels\\UpdateValue.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-03T17:23:32.352Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Users\\ayira\\Desktop\\WGO-API\\WGO-API\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
               "ToolTip": "C:\\Users\\ayira\\Desktop\\WGO-API\\WGO-API\\Controllers\\UsersController.cs",
               "RelativeToolTip": "Controllers\\UsersController.cs",
-              "ViewState": "AQIAALcAAAAAAAAAAAAmwGgAAAA1AAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-03T02:02:00.218Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "MarkersController.cs",
-              "DocumentMoniker": "C:\\Users\\ayira\\Desktop\\WGO-API\\WGO-API\\Controllers\\MarkersController.cs",
-              "RelativeDocumentMoniker": "Controllers\\MarkersController.cs",
-              "ToolTip": "C:\\Users\\ayira\\Desktop\\WGO-API\\WGO-API\\Controllers\\MarkersController.cs",
-              "RelativeToolTip": "Controllers\\MarkersController.cs",
-              "ViewState": "AQIAABEAAAAAAAAAAAAxwGwAAAAmAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-03T02:01:56.237Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "CommentsController.cs",
-              "DocumentMoniker": "C:\\Users\\ayira\\Desktop\\WGO-API\\WGO-API\\Controllers\\CommentsController.cs",
-              "RelativeDocumentMoniker": "Controllers\\CommentsController.cs",
-              "ToolTip": "C:\\Users\\ayira\\Desktop\\WGO-API\\WGO-API\\Controllers\\CommentsController.cs",
-              "RelativeToolTip": "Controllers\\CommentsController.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAiwLIAAAAnAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-03T02:01:56.669Z",
+              "WhenOpened": "2024-06-03T17:11:01.228Z",
               "EditorCaption": ""
             }
           ]

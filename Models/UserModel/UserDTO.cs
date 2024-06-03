@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using WGO_API.Models.Validation;
 using WGO_API.Utils;
 
 namespace WGO_API.Models.UserModel

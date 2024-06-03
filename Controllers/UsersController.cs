@@ -6,7 +6,7 @@ using WGO_API.Models.UserModel;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using WGO_API.Models.UpdateValue;
+using WGO_API.Models.SupportingModels;
 
 namespace WGO_API.Controllers
 {
