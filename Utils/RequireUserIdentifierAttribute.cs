@@ -12,7 +12,7 @@ namespace WGO_API.Models.Validation
 
             return (string.IsNullOrEmpty(userDTO.UserName) 
                 && string.IsNullOrEmpty(userDTO.Email))
-                ? new ValidationResult("Either Username or Email must be provided.")
+                ? new ValidationResult("Either UserName or Email must be provided.")
                 : null;
         }
     }

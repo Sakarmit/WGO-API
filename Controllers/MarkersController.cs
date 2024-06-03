@@ -2,6 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using WGO_API.Models.MarkerModel;
 using WGO_API.Models.ReportModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using WGO_API.Models.UserModel;
 
 namespace WGO_API.Controllers
 {
@@ -9,33 +12,115 @@ namespace WGO_API.Controllers
     [ApiController]
     public class MarkersController : ControllerBase
     {
-        private readonly MarkerContext _context;
+        private readonly MarkerContext _userContext;
+        private readonly UserManager<User> _userManager;
 
-        public MarkersController(MarkerContext context)
+        public MarkersController(MarkerContext context, UserManager<User> userManager)
         {
-            _context = context;
+            _userContext = context;
+            _userManager = userManager;
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult<MarkerDTO>> PostMarker(MarkerDTO markerDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            Marker marker = new Marker
+            {
+                Id = markerDTO.Id,
+                Title = markerDTO.Title,
+                Summary = markerDTO.Summary,
+                UserId = user.Id,
+                UserName = user.UserName ?? "UserName Not Found",
+                latitude = markerDTO.latitude,
+                longitude = markerDTO.longitude,
+                DateTime = markerDTO.DateTime,
+                EndTime = markerDTO.EndTime,
+            };
+
+            _userContext.Markers.Add(marker);
+            await _userContext.SaveChangesAsync();
+
+            return CreatedAtAction(
+                nameof(GetMarker),
+                new { id = marker.Id },
+                MarkerToDTO(marker));
+        }
+
+        [Authorize]
+        [HttpPut("Update")]
+        public async Task<IActionResult> PutMarker(MarkerDTO markerDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            var marker = await _userContext.Markers.FindAsync(markerDTO.Id);
+
+            if (marker == null)
+            {
+                return NotFound("Marker not found");
+            }
+
+            if (marker.UserId != user.Id)
+            {
+                return Unauthorized("User unauthorized to make changes to this marker.");
+            }
+
+            updateMarker(marker, markerDTO);
+
+            try
+            {
+                await _userContext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException) when (!MarkerExists(markerDTO.Id))
+            {
+                return NotFound("Marker not found");
+            }
+
+            return Ok("Marker updated successfully");
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MarkerDTO>>> GetMarkers()
         {
-            if (_context.Markers == null)
+            if (_userContext.Markers == null)
             {
-                return NotFound();
+                return StatusCode(500);
             }
-            return await _context.Markers
+            return await _userContext.Markers
               .Select(x => MarkerToDTO(x))
               .ToListAsync();
         }
 
-        [HttpGet("Updates")]
+        [HttpGet("Since")]
         public async Task<ActionResult<IEnumerable<MarkerDTO>>> GetMarkersUpdate(DateTime dateTime)
         {
-            if (_context.Markers == null)
+            if (_userContext.Markers == null)
             {
-                return NotFound();
+                return StatusCode(500);
             }
-            return await _context.Markers
+            return await _userContext.Markers
               .Where(x => DateTime.Compare(x.DateTime, dateTime) >= 0)
               .Select(x => MarkerToDTO(x))
               .ToListAsync();
@@ -44,100 +129,62 @@ namespace WGO_API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<MarkerDTO>> GetMarker(int id)
         {
-            if (_context.Markers == null)
+            if (_userContext.Markers == null)
             {
-                return NotFound();
+                return StatusCode(500);
             }
-            var marker = await _context.Markers.FindAsync(id);
+            var marker = await _userContext.Markers.FindAsync(id);
 
             if (marker == null)
             {
-                return NotFound();
+                return NotFound("Marker not found");
             }
 
             return MarkerToDTO(marker);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<MarkerDTO>> PostMarker(MarkerDTO markerDTO)
-        {
-            var marker = new Marker
-            {
-                Id = markerDTO.Id,
-                Title = markerDTO.Title,
-                Summary = markerDTO.Summary,
-                UserId = markerDTO.UserId,
-                latitude = markerDTO.latitude,
-                longitude = markerDTO.longitude,
-                DateTime = markerDTO.DateTime,
-                EndTime = markerDTO.EndTime,
-            };
-
-            _context.Markers.Add(marker);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(
-                nameof(GetMarker),
-                new { id = marker.Id },
-                MarkerToDTO(marker));
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutMarker(int id, MarkerDTO markerDTO)
-        {
-            if (id != markerDTO.Id)
-            {
-                return BadRequest();
-            }
-
-            var marker = await _context.Markers.FindAsync(id);
-
-            if (marker == null)
-            {
-                return NotFound();
-            }
-
-            updateMarker(marker, markerDTO);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException) when (!MarkerExists(id))
-            {
-                return NotFound();
-            }
-
-            return NoContent();
-        }
-
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMarker(int id)
         {
-            if (_context.Markers == null)
+            if (_userContext.Markers == null)
             {
-                return NotFound();
+                return StatusCode(500);
             }
-            var marker = await _context.Markers.FindAsync(id);
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            var marker = await _userContext.Markers.FindAsync(id);
+
             if (marker == null)
             {
-                return NotFound();
+                return NotFound("Marker not found");
             }
 
-            _context.Markers.Remove(marker);
-            await _context.SaveChangesAsync();
+            if (marker.UserId != user.Id)
+            {
+                return Unauthorized("User unauthorized to make changes to this marker.");
+            }
 
-            return NoContent();
+            _userContext.Markers.Remove(marker);
+            await _userContext.SaveChangesAsync();
+
+            return Ok("Marker deleted");
         }
 
+        [Authorize]
         [HttpPut("{id}/Report")]
-        public async Task<ActionResult<bool>> ReportMarker(Report report)
+        public async Task<IActionResult> ReportMarker(Report report)
         {
-            var marker = await _context.Markers.FindAsync(report.ItemId);
+            var marker = await _userContext.Markers.FindAsync(report.ItemId);
 
             if (marker == null)
             {
-                return NotFound();
+                return NotFound("Marker not found");
             }
 
             marker.ReportCount += 1;
@@ -151,26 +198,25 @@ namespace WGO_API.Controllers
 
                     await reportContext.SaveChangesAsync();
                 }
-                _context.Markers.Remove(marker);
-                await _context.SaveChangesAsync();
-                return true;
+                _userContext.Markers.Remove(marker);
+                await _userContext.SaveChangesAsync();
+                return Ok("Reported marker removed");
             }
 
-            
             try
             {
-                await _context.SaveChangesAsync();
+                await _userContext.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException) when (!MarkerExists(report.ItemId))
             {
-                return NotFound();
+                return NotFound("Marker not found");
             }
-            return false;
+            return Ok("Marker reported");
         }
 
         private bool MarkerExists(int id)
         {
-            return (_context.Markers?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_userContext.Markers?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
         //Converts the Marker object to MarkerDTO hiding private info
@@ -178,13 +224,14 @@ namespace WGO_API.Controllers
         => new MarkerDTO
         {
             Id = marker.Id,
-            UserId = marker.UserId,
-            //Not adding reportCount
-            latitude = marker.latitude,
-            longitude = marker.longitude,
-            DateTime = marker.DateTime,
+            UserName = marker.UserName,
+            Title = marker.Title,
             Summary = marker.Summary,
-            Title = marker.Title
+            //Not adding reportCount
+            longitude = marker.longitude,
+            latitude = marker.latitude,
+            DateTime = marker.DateTime,
+            EndTime = marker.EndTime,   
         };
 
         //Update the marker entry with info from markerDTO
@@ -195,6 +242,7 @@ namespace WGO_API.Controllers
             marker.latitude = markerDTO.latitude;
             marker.longitude = markerDTO.longitude;
             marker.DateTime = markerDTO.DateTime;
+            marker.EndTime = markerDTO.EndTime;
         }
     }
 }

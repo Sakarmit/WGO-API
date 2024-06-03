@@ -33,14 +33,20 @@ namespace WGO_API.Migrations.Marker
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Summary")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<float>("latitude")
                         .HasColumnType("REAL");

@@ -7,7 +7,7 @@ namespace WGO_API.Models.UserModel
     [RequireUserIdentifier]
     public class UserDTO
     {
-        [MinLengthorEmpty(4)]
+        [MinMaxLengthorEmpty(4, 16)]
         public string? UserName { get; set; }
         [EmailAddressorEmpty]
         public string? Email { get; set; }

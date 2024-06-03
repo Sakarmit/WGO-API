@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WGO_API.Models.CommentModel;
+using WGO_API.Models.MarkerModel;
 using WGO_API.Models.ReportModel;
+using WGO_API.Models.UserModel;
 
 namespace WGO_API.Controllers
 {
@@ -9,93 +13,143 @@ namespace WGO_API.Controllers
     [ApiController]
     public class CommentsController : ControllerBase
     {
-        private readonly CommentContext _context;
+        private readonly CommentContext _commentContext;
+        private readonly UserManager<User> _userManager;
 
-        public CommentsController(CommentContext context)
+        public CommentsController(CommentContext context, UserManager<User> userManager)
         {
-            _context = context;
+            _commentContext = context;
+            _userManager = userManager;
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult<Comment>> PostComment(CommentDTO commentDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            Comment comment = new Comment 
+            { 
+                Id = commentDTO.Id,
+                MarkerId = commentDTO.MarkerId,
+                UserId = user.Id,
+                UserName = user.UserName ?? "UserName not found",
+                DateTime = commentDTO.DateTime,
+                Message = commentDTO.Message
+            };
+
+            _commentContext.Comments.Add(comment);
+            await _commentContext.SaveChangesAsync();
+
+            return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
+        }
+
+        [HttpPut("Update")]
+        public async Task<IActionResult> PutComment(CommentDTO commentDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            var comment = await _commentContext.Comments.FindAsync(commentDTO.Id);
+
+            if (comment == null)
+            {
+                return NotFound("Comment not found");
+            }
+
+            if (comment.UserId != user.Id)
+            {
+                return Unauthorized("User unauthorized to make changes to this comment.");
+            }
+
+            comment.Message = commentDTO.Message;
+
+            try
+            {
+                await _commentContext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException) when (!CommentExists(commentDTO.Id))
+            {
+                return NotFound("Comment not found");
+            }
+
+            return Ok("Comment Updated Successfully");
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<CommentDTO>>> GetCommentsForMarker(int id)
         {
-            if (_context.Comments == null)
+            if (_commentContext.Comments == null)
             {
-                return NotFound();
+                return StatusCode(500);
             }
-            return await _context.Comments
+            return await _commentContext.Comments
               .Where(x => x.MarkerId == id)
               .Select(x => CommentToDTO(x))
               .ToListAsync();
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutComment(int id, Comment comment)
-        {
-            if (id != comment.Id)
-            {
-                return BadRequest();
-            }
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CommentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<Comment>> PostComment(Comment comment)
-        {
-          if (_context.Comments == null)
-          {
-              return Problem("Entity set 'CommentContext.Comments'  is null.");
-          }
-            _context.Comments.Add(comment);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
-        }
-
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComment(int id)
         {
-            if (_context.Comments == null)
+            if (_commentContext.Comments == null)
             {
-                return NotFound();
+                return StatusCode(500);
             }
-            var comment = await _context.Comments.FindAsync(id);
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            var comment = await _commentContext.Comments.FindAsync(id);
+
             if (comment == null)
             {
-                return NotFound();
+                return NotFound("Comment not found");
             }
 
-            _context.Comments.Remove(comment);
-            await _context.SaveChangesAsync();
+            if (comment.UserId != user.Id)
+            {
+                return Unauthorized("User unauthorized to make changes to this comment.");
+            }
 
-            return NoContent();
+            _commentContext.Comments.Remove(comment);
+            await _commentContext.SaveChangesAsync();
+
+            return Ok("Comment deleted");
         }
 
+        [Authorize]
         [HttpPut("{id}/Report")]
-        public async Task<ActionResult<bool>> ReportComment(Report report)
+        public async Task<IActionResult> ReportComment(Report report)
         {
-            var comment = await _context.Comments.FindAsync(report.ItemId);
+            var comment = await _commentContext.Comments.FindAsync(report.ItemId);
 
             if (comment == null)
             {
-                return NotFound();
+                return NotFound("Comment not found");
             }
 
             comment.ReportCount += 1;
@@ -109,25 +163,25 @@ namespace WGO_API.Controllers
 
                     await reportContext.SaveChangesAsync();
                 }
-                _context.Comments.Remove(comment);
-                await _context.SaveChangesAsync();
-                return true;
+                _commentContext.Comments.Remove(comment);
+                await _commentContext.SaveChangesAsync();
+                return Ok("Reported comment removed");
             }
             
             try
             {
-                await _context.SaveChangesAsync();
+                await _commentContext.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException) when (!CommentExists(report.ItemId))
             {
-                return NotFound();
+                return NotFound("Comment not found");
             }
-            return false;
+            return Ok("Comment reported");
         }
 
         private bool CommentExists(int id)
         {
-            return (_context.Comments?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_commentContext.Comments?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
         // Converts the Comment object to CommentDTO hiding private info
@@ -136,7 +190,7 @@ namespace WGO_API.Controllers
         {
             Id = marker.Id,
             MarkerId = marker.MarkerId,
-            UserId = marker.UserId,
+            UserName = marker.UserName,
             DateTime = marker.DateTime,
             Message = marker.Message,  
         };

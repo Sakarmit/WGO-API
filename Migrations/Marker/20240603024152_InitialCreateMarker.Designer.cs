@@ -11,7 +11,7 @@ using WGO_API.Models.MarkerModel;
 namespace WGO_API.Migrations.Marker
 {
     [DbContext(typeof(MarkerContext))]
-    [Migration("20240522012427_InitialCreateMarker")]
+    [Migration("20240603024152_InitialCreateMarker")]
     partial class InitialCreateMarker
     {
         /// <inheritdoc />
@@ -36,14 +36,20 @@ namespace WGO_API.Migrations.Marker
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Summary")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<float>("latitude")
                         .HasColumnType("REAL");

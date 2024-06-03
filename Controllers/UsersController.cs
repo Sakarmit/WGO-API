@@ -141,13 +141,13 @@ namespace WGO_API.Controllers
 
         [Authorize]
         [HttpPut("change_username")]
-        public async Task<IActionResult> ChangeUsername([FromQuery] String newUsername)
+        public async Task<IActionResult> ChangeUserName([FromQuery] String newUserName)
         {
-            if (string.IsNullOrEmpty(newUsername))
+            if (string.IsNullOrEmpty(newUserName))
             {
                 return BadRequest("New username must be provided.");
             }
-            if (newUsername.Length <= 4)
+            if (newUserName.Length <= 4)
             {
 
             }
@@ -159,10 +159,10 @@ namespace WGO_API.Controllers
                 return Unauthorized("User not found.");
             }
 
-            user.UserName = newUsername;
+            user.UserName = newUserName;
             await _userManager.UpdateNormalizedUserNameAsync(user);
 
-            return Ok("Username successfully updated.");
+            return Ok("UserName successfully updated.");
         }
 
         [Authorize]

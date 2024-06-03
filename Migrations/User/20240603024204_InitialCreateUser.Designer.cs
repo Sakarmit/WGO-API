@@ -11,7 +11,7 @@ using WGO_API.Models.UserModel;
 namespace WGO_API.Migrations.User
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20240522012438_InitialCreateUser")]
+    [Migration("20240603024204_InitialCreateUser")]
     partial class InitialCreateUser
     {
         /// <inheritdoc />
