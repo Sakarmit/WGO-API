@@ -11,14 +11,14 @@ using WGO_API.Models.UserModel;
 namespace WGO_API.Migrations.User
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20240603024204_InitialCreateUser")]
+    [Migration("20240604014129_InitialCreateUser")]
     partial class InitialCreateUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.5");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {

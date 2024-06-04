@@ -15,7 +15,7 @@ namespace WGO_API.Migrations.Marker
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.5");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
 
             modelBuilder.Entity("WGO_API.Models.MarkerModel.Marker", b =>
                 {
@@ -23,14 +23,23 @@ namespace WGO_API.Migrations.Marker
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<float>("Latitude")
+                        .HasColumnType("REAL");
+
+                    b.Property<float>("Longitude")
+                        .HasColumnType("REAL");
+
                     b.Property<int>("ReportCount")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Summary")
                         .IsRequired()
@@ -47,12 +56,6 @@ namespace WGO_API.Migrations.Marker
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<float>("latitude")
-                        .HasColumnType("REAL");
-
-                    b.Property<float>("longitude")
-                        .HasColumnType("REAL");
 
                     b.HasKey("Id");
 

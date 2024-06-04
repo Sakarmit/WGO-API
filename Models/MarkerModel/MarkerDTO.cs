@@ -13,11 +13,12 @@ namespace WGO_API.Models.MarkerModel
         public string Summary { get; set; } = string.Empty;
         [Required]
         [Range(-180, 180)]
-        public required float longitude { get; set; }
+        public required float Longitude { get; set; }
         [Required]
         [Range(-90, 90)]
-        public required float latitude { get; set; }
-        public DateTime DateTime { get; set; }
+        public required float Latitude { get; set; }
+        public DateTime LastUpdated { get; set; }
+        public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
 
     }

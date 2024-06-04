@@ -4,23 +4,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WGO_API.Models.MarkerModel;
+using WGO_API.Models.CommentModel;
 
 #nullable disable
 
-namespace WGO_API.Migrations.Marker
+namespace WGO_API.Migrations.Comment
 {
-    [DbContext(typeof(MarkerContext))]
-    [Migration("20240603024152_InitialCreateMarker")]
-    partial class InitialCreateMarker
+    [DbContext(typeof(CommentContext))]
+    [Migration("20240604014112_InitialCreateComment")]
+    partial class InitialCreateComment
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.5");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
 
-            modelBuilder.Entity("WGO_API.Models.MarkerModel.Marker", b =>
+            modelBuilder.Entity("WGO_API.Models.CommentModel.Comment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -29,19 +29,15 @@ namespace WGO_API.Migrations.Marker
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("EndTime")
+                    b.Property<int>("MarkerId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ReportCount")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Summary")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -51,15 +47,9 @@ namespace WGO_API.Migrations.Marker
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<float>("latitude")
-                        .HasColumnType("REAL");
-
-                    b.Property<float>("longitude")
-                        .HasColumnType("REAL");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Markers");
+                    b.ToTable("Comments");
                 });
 #pragma warning restore 612, 618
         }

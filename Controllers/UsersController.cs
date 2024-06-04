@@ -111,12 +111,12 @@ namespace WGO_API.Controllers
         [HttpPut("change_password")]
         public async Task<IActionResult> ChangePassword(UpdatePassword passwordChange)
         {
-            if (string.IsNullOrEmpty(passwordChange.oldPassword))
+            if (string.IsNullOrEmpty(passwordChange.OldPassword))
             {
                 return BadRequest("Old password must be provided.");
             }
 
-            if (string.IsNullOrEmpty(passwordChange.newPassword))
+            if (string.IsNullOrEmpty(passwordChange.NewPassword))
             {
                 return BadRequest("New password must be provided.");
             }
@@ -128,13 +128,13 @@ namespace WGO_API.Controllers
                 return NotFound("User not found.");
             }
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, passwordChange.oldPassword, false);
+            var result = await _signInManager.CheckPasswordSignInAsync(user, passwordChange.OldPassword, false);
             if (!result.Succeeded)
             {
                 return Unauthorized("Invalid password.");
             }
 
-            await _userManager.ChangePasswordAsync(user, passwordChange.oldPassword, passwordChange.newPassword);
+            await _userManager.ChangePasswordAsync(user, passwordChange.OldPassword, passwordChange.NewPassword);
 
             return Ok("Password successfully updated.");
         }

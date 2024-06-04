@@ -21,9 +21,10 @@ namespace WGO_API.Migrations.Marker
                     UserName = table.Column<string>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Summary = table.Column<string>(type: "TEXT", nullable: false),
-                    longitude = table.Column<float>(type: "REAL", nullable: false),
-                    latitude = table.Column<float>(type: "REAL", nullable: false),
-                    DateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Longitude = table.Column<float>(type: "REAL", nullable: false),
+                    Latitude = table.Column<float>(type: "REAL", nullable: false),
+                    LastUpdated = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     EndTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ReportCount = table.Column<int>(type: "INTEGER", nullable: false)
                 },

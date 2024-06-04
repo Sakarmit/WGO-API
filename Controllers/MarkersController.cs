@@ -44,9 +44,9 @@ namespace WGO_API.Controllers
                 Summary = markerDTO.Summary,
                 UserId = user.Id,
                 UserName = user.UserName ?? "UserName Not Found",
-                latitude = markerDTO.latitude,
-                longitude = markerDTO.longitude,
-                DateTime = markerDTO.DateTime,
+                Latitude = markerDTO.Latitude,
+                Longitude = markerDTO.Longitude,
+                LastUpdated = markerDTO.LastUpdated,
                 EndTime = markerDTO.EndTime,
             };
 
@@ -121,7 +121,7 @@ namespace WGO_API.Controllers
                 return StatusCode(500);
             }
             return await _userContext.Markers
-              .Where(x => DateTime.Compare(x.DateTime, dateTime) >= 0)
+              .Where(x => DateTime.Compare(x.LastUpdated, dateTime) >= 0)
               .Select(x => MarkerToDTO(x))
               .ToListAsync();
         }
@@ -228,9 +228,10 @@ namespace WGO_API.Controllers
             Title = marker.Title,
             Summary = marker.Summary,
             //Not adding reportCount
-            longitude = marker.longitude,
-            latitude = marker.latitude,
-            DateTime = marker.DateTime,
+            Longitude = marker.Longitude,
+            Latitude = marker.Latitude,
+            LastUpdated = marker.LastUpdated,
+            StartTime = marker.StartTime,
             EndTime = marker.EndTime,   
         };
 
@@ -239,9 +240,10 @@ namespace WGO_API.Controllers
         {
             marker.Title = markerDTO.Title;
             marker.Summary = markerDTO.Summary;
-            marker.latitude = markerDTO.latitude;
-            marker.longitude = markerDTO.longitude;
-            marker.DateTime = markerDTO.DateTime;
+            marker.Latitude = markerDTO.Latitude;
+            marker.Longitude = markerDTO.Longitude;
+            marker.LastUpdated = DateTime.UtcNow;
+            marker.StartTime = markerDTO.StartTime;
             marker.EndTime = markerDTO.EndTime;
         }
     }

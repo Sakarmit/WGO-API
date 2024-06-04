@@ -6,9 +6,9 @@ namespace WGO_API.Models.SupportingModels
     {
         [Required]
         [MinLength(9)]
-        public required string oldPassword { get; set; }
+        public required string OldPassword { get; set; }
         [Required]
         [MinLength(9)]
-        public required string newPassword { get; set; }
+        public required string NewPassword { get; set; }
     }
 }

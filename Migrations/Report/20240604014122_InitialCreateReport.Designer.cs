@@ -10,14 +10,14 @@ using WGO_API.Models.ReportModel;
 namespace WGO_API.Migrations.Report
 {
     [DbContext(typeof(ReportContext))]
-    [Migration("20240603024158_InitialCreateReport")]
+    [Migration("20240604014122_InitialCreateReport")]
     partial class InitialCreateReport
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.5");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
 
             modelBuilder.Entity("WGO_API.Models.ReportModel.Report", b =>
                 {
